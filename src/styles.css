@@ -1,0 +1,242 @@
+.lottie-progress {
+  -webkit-appearance: none;
+  -moz-apperance: none;
+  width: 100%;
+  height: 3px;
+  border-radius: 3px;
+  cursor: pointer;
+  background: #ccc;
+}
+.lottie-progress:focus {
+  outline: none;
+  border: none;
+}
+.lottie-progress::-webkit-slider-runnable-track {
+  cursor: pointer;
+  height: 1px;
+  border: none;
+  outline: none;
+}
+.lottie-progress::-moz-range-track {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+.lottie-progress::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  margin-top: -6px;
+  cursor: pointer;
+}
+.lottie-progress::-moz-range-thumb {
+  -moz-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  margin-top: -6px;
+  cursor: pointer;
+}
+.lottie-progress::-ms-track {
+  width: 100%;
+  height: 3px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.lottie-progress::-ms-fill-lower {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lottie-progress::-ms-fill-upper {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lottie-progress::-ms-thumb {
+  border: 0;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lottie-progress:focus::-ms-fill-lower {
+  background: #ccc;
+}
+.lottie-progress:focus::-ms-fill-upper {
+  background: #ccc;
+}
+.lottie-player-container :focus {
+  outline: 0;
+}
+.lottie-popover {
+  position: relative;
+}
+
+.lottie-popover-content {
+  display: inline-block;
+  position: absolute;
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+}
+
+.lottie-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lottie-player-btn-container {
+  display: flex;
+  align-items: center;
+}
+.lottie-player-btn {
+  cursor: pointer;
+  fill: #999;
+  width: 14px;
+}
+
+.lottie-player-btn.active {
+  fill: #555;
+}
+
+.lottie-popover {
+  position: relative;
+}
+
+.lottie-popover-content {
+  display: inline-block;
+  position: absolute;
+  background-color: #ffffff;
+  opacity: 1;
+
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+  padding: 10px;
+}
+
+.lottie-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lottie-arrow {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  bottom: -9px;
+  border-style: solid;
+  border-width: 10px 10px 0 10px;
+}
+
+.lottie-left-align,
+.lottie-left-align .lfarrow {
+  left: 0;
+  right: unset;
+}
+
+.lottie-right-align,
+.lottie-right-align .lottie-arrow {
+  right: 0;
+  left: unset;
+}
+
+.lottie-text-input {
+  border: 1px #ccc solid;
+  border-radius: 5px;
+  padding: 3px;
+  width: 60px;
+  margin: 0;
+}
+
+.lottie-color-picker {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 90px;
+  color: #999;
+}
+
+.lottie-color-selectors {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lottie-color-component {
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.lottie-color-component strong {
+  width: 40px;
+}
+
+.lottie-color-component input[type='range'] {
+  margin: 0 0 0 10px;
+}
+
+.lottie-color-component input[type='number'] {
+  width: 50px;
+  margin: 0 0 0 10px;
+}
+
+.lottie-color-preview {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 5px;
+}
+
+.lottie-preview {
+  height: 60px;
+  width: 60px;
+}
+
+.lottie-popover-snapshot {
+  width: 150px;
+  color: #999;
+}
+.lottie-popover-snapshot h5 {
+  margin: 5px 0 10px 0;
+  font-size: 0.75rem;
+}
+.lottie-popover-snapshot a {
+  display: block;
+  text-decoration: none;
+}
+.lottie-popover-snapshot a:before {
+  content: '⥼';
+  margin-right: 5px;
+}
+.lottie-popover-snapshot .lottie-note {
+  display: block;
+  margin-top: 10px;
+  color: #999;
+}
+.lottie-player-controls > div {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.lottie-player-controls > div:first-child {
+  margin-left: 0;
+}
+.lottie-player-controls > div:last-child {
+  margin-right: 0;
+}
