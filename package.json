@@ -1,17 +1,45 @@
 {
   "name": "lottie-solid",
   "version": "1.0.0",
+  "description": "Lottie Web Player as a solid.js component",
   "type": "module",
+  "main": "dist/lottie-solid.js",
+  "module": "dist/lottie-solid.esm.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@lottiefiles/lottie-player": "^2.0.2",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/node": "^20.11.5",
+    "rollup-plugin-typescript-paths": "^1.5.0",
     "solid-js": "^1.8.7",
+    "tslib": "^2.6.2",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
     "vite-plugin-solid": "^2.8.0"
-  }
+  },
+  "author": "Nazar Taran <hello@neulen.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/naztar0/lottie-solid/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/naztar0/lottie-solid.git"
+  },
+  "homepage": "https://github.com/naztar0/lottie-solid#readme",
+  "keywords": [
+    "lottie",
+    "solid",
+    "solidjs",
+    "component"
+  ]
 }
