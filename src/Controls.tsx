@@ -32,8 +32,7 @@ interface IControlProps {
   snapshot?: () => void;
 }
 
-// noinspection JSUnusedGlobalSymbols
-export const Controls = (props: IControlProps) => {
+const Controls = (props: IControlProps) => {
   const controls = new ControlsClass(props);
   return controls.render();
 };
@@ -264,3 +263,5 @@ class ControlsClass {
     );
   }
 }
+
+export default Controls;

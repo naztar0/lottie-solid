@@ -5,12 +5,15 @@ import {
   onMount,
   onCleanup,
   createSignal,
+  createEffect,
   Switch,
   Match,
+  lazy,
 } from 'solid-js';
 import { render } from 'solid-js/web'
 import lottie, { AnimationItem } from 'lottie-web';
-import { Controls } from './Controls';
+
+const Controls = lazy(() => import('./Controls'));
 
 export type { AnimationItem };
 
@@ -135,7 +138,6 @@ const defaultProps = {
   theme: (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') as Theme,
 }
 
-// noinspection JSUnusedGlobalSymbols
 export const Player = (props: IPlayerProps = defaultProps): JSX.Element => {
   const player = new PlayerClass(props);
 
@@ -155,7 +157,9 @@ class PlayerClass {
   private setState: Setter<IPlayerState>;
   private readonly props: IPlayerProps;
 
-  public container: Element | null = null;
+  private container: () => Element | null;
+  private setContainer: Setter<Element | null>;
+
   public unmounted = false;
 
   constructor(props: IPlayerProps) {
@@ -171,6 +175,8 @@ class PlayerClass {
       loop: this.props.loop || false,
     });
 
+    [this.container, this.setContainer] = createSignal<Element | null>(null);
+
     if (typeof window !== 'undefined') {
       window.lottie = lottie;
     }
@@ -184,24 +190,17 @@ class PlayerClass {
   }
 
   public componentDidMount() {
-    if (!this.unmounted) {
-      this.createLottie().then();
-    }
+    createEffect(() => {
+      if (!this.unmounted) {
+        this.createLottie().then();
+      }
+    });
   }
 
   public componentWillUnmount() {
     this.unmounted = true;
     if (this.state().instance) {
       this.state().instance!.destroy();
-    }
-  }
-
-  public async componentDidUpdate(prevProps: any) {
-    if (this.props.src !== prevProps.src) {
-      if (this.state().instance) {
-        this.state().instance!.destroy();
-      }
-      await this.createLottie();
     }
   }
 
@@ -272,7 +271,7 @@ class PlayerClass {
           <Match when={this.state().playerState !== PlayerState.Error}>
             <div
               id={this.props.id ? this.props.id : 'lottie'}
-              ref={el => (this.container = el)}
+              ref={this.setContainer}
               style={{
                 background: this.state().background,
                 margin: '0 auto',
@@ -305,7 +304,7 @@ class PlayerClass {
       theme,
     } = this.props;
 
-    if (!src || !this.container) {
+    if (!src || !this.container()) {
       return;
     }
 
@@ -338,7 +337,7 @@ class PlayerClass {
         rendererSettings: rendererSettings || defaultOptions,
         animationData,
         autoplay: autoplay || false,
-        container: this.container as Element,
+        container: this.container()!,
         loop: loop || false,
         renderer,
       });
@@ -398,53 +397,51 @@ class PlayerClass {
         }
       });
 
-      if (this.container) {
-        if (hover) {
-          this.container.addEventListener('mouseenter', () => {
-            if (this.state().playerState !== PlayerState.Playing) {
-              if (this.props.keepLastFrame) {
-                this.stop();
-              }
-              this.play();
-            }
-          });
-          this.container.addEventListener('mouseleave', () => {
-            if (this.state().playerState === PlayerState.Playing) {
+      if (hover) {
+        this.container()!.addEventListener('mouseenter', () => {
+          if (this.state().playerState !== PlayerState.Playing) {
+            if (this.props.keepLastFrame) {
               this.stop();
             }
-          });
-        }
+            this.play();
+          }
+        });
+        this.container()!.addEventListener('mouseleave', () => {
+          if (this.state().playerState === PlayerState.Playing) {
+            this.stop();
+          }
+        });
+      }
 
-        if (click) {
-          this.container.addEventListener('click', () => {
-            if (this.state().playerState !== PlayerState.Playing) {
-              if (this.props.keepLastFrame) {
-                this.stop();
-              }
-              this.play();
-            } else {
+      if (click) {
+        this.container()!.addEventListener('click', () => {
+          if (this.state().playerState !== PlayerState.Playing) {
+            if (this.props.keepLastFrame) {
               this.stop();
             }
-          });
-        }
+            this.play();
+          } else {
+            this.stop();
+          }
+        });
+      }
 
-        if (this.props.controls) {
-          render(() => (
-            <Controls
-              buttons={buttons}
-              instance={newInstance}
-              theme={theme}
-              state={this.state}
-              pause={() => this.pause()}
-              play={() => this.play()}
-              stop={() => this.stop()}
-              snapshot={() => this.snapshot()}
-              setLoop={(loop: boolean) => this.setLoop(loop)}
-              setSeeker={(f: number, p: boolean) => this.setSeeker(f, p)}
-              colorChangedEvent={(hex: string) => this.handleBgChange(hex)}
-            />
-          ), this.container);
-        }
+      if (this.props.controls) {
+        render(() => (
+          <Controls
+            buttons={buttons}
+            instance={newInstance}
+            theme={theme}
+            state={this.state}
+            pause={() => this.pause()}
+            play={() => this.play()}
+            stop={() => this.stop()}
+            snapshot={() => this.snapshot()}
+            setLoop={(loop: boolean) => this.setLoop(loop)}
+            setSeeker={(f: number, p: boolean) => this.setSeeker(f, p)}
+            colorChangedEvent={(hex: string) => this.handleBgChange(hex)}
+          />
+        ), this.container()!);
       }
 
       // Set initial playback speed and direction
