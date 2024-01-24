@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite';
 import solid from 'vite-plugin-solid';
+import libCss from 'vite-plugin-libcss';
 import typescript from '@rollup/plugin-typescript';
 import { typescriptPaths } from 'rollup-plugin-typescript-paths';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [solid()],
+  plugins: [solid(), libCss()],
   build: {
     manifest: true,
     minify: true,
