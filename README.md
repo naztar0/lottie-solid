@@ -92,8 +92,7 @@ The lottieRef prop returns the Lottie instance which you can use to set data and
 
 ```typescript jsx
 import { createSignal, createEffect } from 'solid-js';
-import { Player } from 'lottie-solid';
-import { AnimationItem } from 'lottie-web';
+import { Player, AnimationItem } from 'lottie-solid';
 
 export default function App() {
   const [lottieRef, setLottieRef] = createSignal<AnimationItem>();
@@ -122,8 +121,7 @@ export default function App() {
 
 ```typescript jsx
 import { createSignal, createEffect } from 'solid-js';
-import { Player } from 'lottie-solid';
-import { AnimationItem } from 'lottie-web';
+import { Player, AnimationItem } from 'lottie-solid';
 
 export default function App() {
   const [lottieRef, setLottieRef] = createSignal<AnimationItem>();
