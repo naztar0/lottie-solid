@@ -109,7 +109,7 @@ export default function App() {
   
   return (
     <Player
-      lottieRef={setLottie} // the lottie instance is returned in the argument of this prop. set it to your local state
+      lottieRef={setLottieRef} // the lottie instance is returned in the argument of this prop. set it to your local state
       loop
       src="https://assets3.lottiefiles.com/packages/lf20_XZ3pkn.json"
       style={{ height: '300px', width: '300px' }}
@@ -141,7 +141,7 @@ export default function App() {
           this.doSomething();
         }
       }}
-      lottieRef={setLottie}
+      lottieRef={setLottieRef}
       loop
       src="https://assets3.lottiefiles.com/packages/lf20_XZ3pkn.json"
       style={{ height: '300px', width: '300px' }}
