@@ -1,5 +1,5 @@
 import { createMemo, JSX, Show } from 'solid-js';
-import { Theme} from './Player';
+import { Theme } from './Player';
 import './styles.css';
 
 interface ISeekerProps {
