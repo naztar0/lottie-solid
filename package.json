@@ -3,31 +3,23 @@
   "version": "1.0.0",
   "description": "Lottie Web Player as a solid.js component",
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
   "files": [
     "dist"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "tsup"
   },
   "peerDependencies": {
-    "@lottiefiles/lottie-player": "^2.0.2",
+    "lottie-web": "^5.12.2",
     "solid-js": "^1.8.7"
   },
+  "dependencies": {
+    "lottie-web": "^5.12.2"
+  },
   "devDependencies": {
-    "@lottiefiles/lottie-player": "^2.0.2",
-    "@rollup/plugin-typescript": "^11.1.6",
-    "@types/node": "^20.11.5",
-    "rollup-plugin-typescript-paths": "^1.5.0",
-    "solid-js": "^1.8.7",
-    "tslib": "^2.6.2",
-    "typescript": "^5.2.2",
-    "vite": "^5.0.8",
-    "vite-plugin-libcss": "^1.1.1",
-    "vite-plugin-solid": "^2.8.0"
+    "tsup": "^8.0.1",
+    "tsup-preset-solid": "^2.1.0",
+    "typescript": "^5.2.2"
   },
   "author": "Nazar Taran <hello@neulen.dev>",
   "license": "MIT",
@@ -44,5 +36,16 @@
     "solid",
     "solidjs",
     "component"
-  ]
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "browser": {},
+  "exports": {
+    "import": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "typesVersions": {}
 }
