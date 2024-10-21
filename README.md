@@ -166,6 +166,14 @@ The following events are exposed and can be listened to via `addEventListener` c
 
 ## Methods
 
+### `play() => void`
+
+Start playing animation.
+
+#### Returns
+
+Type: `void`
+
 ### `pause() => void`
 
 Pause animation play.
@@ -174,9 +182,9 @@ Pause animation play.
 
 Type: `void`
 
-### `play() => void`
+### `stop() => void`
 
-Start playing animation.
+Stop animation play.
 
 #### Returns
 
@@ -210,17 +218,16 @@ Sets animation play speed.
 
 Type: `void`
 
-### `stop() => void`
-
-Stops animation play.
-
-#### Returns
-
-Type: `void`
-
 ### `setSeeker(frame: number, play: boolean) => void`
 
 Seek to a given frame.
+
+#### Parameters
+
+| Name    | Type      | Description       |
+|---------|-----------|-------------------|
+| `frame` | `number`  | Frame number.     |
+| `play`  | `boolean` | Play after seek.  |
 
 #### Returns
 
