@@ -5,17 +5,21 @@ import {
   onMount,
   onCleanup,
   createSignal,
-  createEffect,
   Switch,
   Match,
   lazy,
 } from 'solid-js';
 import { render } from 'solid-js/web'
-import lottie, { AnimationItem } from 'lottie-web';
+import lottie, { AnimationItem as LWAnimationItem } from 'lottie-web';
 
 const Controls = lazy(() => import('./Controls'));
 
-export type { AnimationItem };
+export type AnimationItem = {
+  _play: () => void;
+  _pause: () => void;
+  _stop: () => void;
+  setSeeker: (seek: number, play?: boolean) => void;
+} & LWAnimationItem;
 
 /**
  * Parse a resource into a JSON object or a URL string
@@ -118,7 +122,6 @@ interface IPlayerState {
   animationData: any;
   background: string;
   containerRef: Ref<HTMLDivElement> | null;
-  instance: AnimationItem | null;
   seeker: number;
   loop: boolean;
   playerState: PlayerState;
@@ -159,6 +162,7 @@ class PlayerClass {
 
   private container: () => Element | null;
   private setContainer: Setter<Element | null>;
+  private instance: AnimationItem | null = null;
 
   public unmounted = false;
 
@@ -169,7 +173,6 @@ class PlayerClass {
       animationData: null,
       background: 'transparent',
       containerRef: null,
-      instance: null,
       playerState: PlayerState.Loading,
       seeker: 0,
       loop: this.props.loop || false,
@@ -190,17 +193,15 @@ class PlayerClass {
   }
 
   public componentDidMount() {
-    createEffect(() => {
-      if (!this.unmounted) {
-        this.createLottie().then();
-      }
-    });
+    if (!this.unmounted) {
+      this.createLottie().then();
+    }
   }
 
   public componentWillUnmount() {
     this.unmounted = true;
-    if (this.state().instance) {
-      this.state().instance!.destroy();
+    if (this.instance) {
+      this.instance.destroy();
     }
   }
 
@@ -328,8 +329,8 @@ class PlayerClass {
       }
 
       // Clear previous animation, if any
-      if (this.state().instance) {
-        this.state().instance!.destroy();
+      if (this.instance) {
+        this.instance.destroy();
       }
 
       // Initialize lottie player and load animation
@@ -340,14 +341,22 @@ class PlayerClass {
         container: this.container()!,
         loop: loop || false,
         renderer,
-      });
+      }) as AnimationItem;
+
+      newInstance._play = newInstance.play.bind(newInstance);
+      newInstance._pause = newInstance.pause.bind(newInstance);
+      newInstance._stop = newInstance.stop.bind(newInstance);
+      newInstance.play = this.play.bind(this);
+      newInstance.pause = this.pause.bind(this);
+      newInstance.stop = this.stop.bind(this);
+      newInstance.setLoop = this.setLoop.bind(this);
+      newInstance.setSeeker = this.setSeeker.bind(this);
 
       if (speed) {
         newInstance.setSpeed(speed);
       }
+      this.instance = newInstance;
       this.updateState({ animationData });
-
-      this.updateState({ instance: newInstance });
       this.triggerEvent(PlayerEvent.InstanceSaved);
 
       if (typeof lottieRef === 'function') {
@@ -387,10 +396,10 @@ class PlayerClass {
         this.triggerEvent(PlayerEvent.Loop);
       });
 
-      // Set state to pause if the loop is off and anim has completed
+      // Set state to stop if the loop is off and anim has completed
       newInstance.addEventListener('complete', () => {
         this.triggerEvent(PlayerEvent.Complete);
-        this.updateState({ playerState: PlayerState.Paused });
+        this.updateState({ playerState: PlayerState.Stopped });
 
         if (!this.props.keepLastFrame || this.props.loop) {
           this.setSeeker(0);
@@ -446,11 +455,11 @@ class PlayerClass {
 
       // Set initial playback speed and direction
       if (speed) {
-        this.setPlayerSpeed(speed);
+        newInstance.setSpeed(speed);
       }
 
       if (direction) {
-        this.setPlayerDirection(direction);
+        newInstance.setDirection(direction);
       }
 
       if (background) {
@@ -463,78 +472,53 @@ class PlayerClass {
   }
 
   public play() {
-    const { instance } = this.state();
-
-    if (instance) {
-      this.triggerEvent(PlayerEvent.Play);
-
-      instance.play();
-
-      this.updateState({ playerState: PlayerState.Playing });
+    if (!this.instance) {
+      return;
     }
+    this.instance._play();
+    this.updateState({ playerState: PlayerState.Playing });
+    this.triggerEvent(PlayerEvent.Play);
   }
 
   public pause() {
-    const { instance } = this.state();
-
-    if (instance) {
-      this.triggerEvent(PlayerEvent.Pause);
-
-      instance.pause();
-
-      this.updateState({ playerState: PlayerState.Paused });
+    if (!this.instance) {
+      return;
     }
+    this.instance._pause();
+    this.updateState({ playerState: PlayerState.Paused });
+    this.triggerEvent(PlayerEvent.Pause);
   }
 
   public stop() {
-    const { instance } = this.state();
-
-    if (instance) {
-      this.triggerEvent(PlayerEvent.Stop);
-
-      instance.stop();
-
-      this.updateState({ playerState: PlayerState.Stopped });
+    if (!this.instance) {
+      return;
     }
-  }
-
-  public setPlayerSpeed(speed: number) {
-    const { instance } = this.state();
-
-    if (instance) {
-      instance.setSpeed(speed);
-    }
-  }
-
-  public setPlayerDirection(direction: PlayerDirection) {
-    const { instance } = this.state();
-
-    if (instance) {
-      instance.setDirection(direction);
-    }
+    this.instance._stop();
+    this.updateState({ playerState: PlayerState.Stopped });
+    this.triggerEvent(PlayerEvent.Stop);
   }
 
   public setSeeker(seek: number, play = false) {
-    const { instance, playerState } = this.state();
-
-    if (instance) {
-      if (!play || playerState !== PlayerState.Playing) {
-        instance.goToAndStop(seek, true);
-        this.triggerEvent(PlayerEvent.Pause);
-        this.updateState({ playerState: PlayerState.Paused });
-      } else {
-        instance.goToAndPlay(seek, true);
-      }
+    if (!this.instance) {
+      return;
+    }
+    if (play) {
+      this.instance.goToAndPlay(seek, true);
+      this.updateState({ playerState: PlayerState.Playing, seeker: seek });
+      this.triggerEvent(PlayerEvent.Play);
+    } else {
+      this.instance.goToAndStop(seek, true);
+      this.updateState({ playerState: PlayerState.Paused, seeker: seek });
+      this.triggerEvent(PlayerEvent.Pause);
     }
   }
 
   public setLoop(loop: boolean) {
-    const { instance } = this.state();
-
-    if (instance) {
-      instance.loop = loop;
-      this.updateState({ instance: instance, loop });
+    if (!this.instance) {
+      return;
     }
+    this.instance.loop = loop;
+    this.updateState({ loop });
   }
 
   private triggerEvent(event: PlayerEvent) {

@@ -1,6 +1,6 @@
 {
   "name": "lottie-solid",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Lottie Web Player as a solid.js component",
   "type": "module",
   "files": [
@@ -11,15 +11,15 @@
   },
   "peerDependencies": {
     "lottie-web": "^5.12.2",
-    "solid-js": "^1.8.7"
+    "solid-js": "^1.9.2"
   },
   "dependencies": {
     "lottie-web": "^5.12.2"
   },
   "devDependencies": {
-    "tsup": "^8.0.1",
-    "tsup-preset-solid": "^2.1.0",
-    "typescript": "^5.2.2"
+    "tsup": "^8.3.0",
+    "tsup-preset-solid": "^2.2.0",
+    "typescript": "^5.6.3"
   },
   "author": "Nazar Taran <hello@neulen.dev>",
   "license": "MIT",
@@ -41,11 +41,11 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "browser": {},
+  "typesVersions": {},
   "exports": {
     "import": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     }
-  },
-  "typesVersions": {}
+  }
 }
