@@ -24,7 +24,7 @@ export const Seeker = (props: ISeekerProps) => {
 
 class SeekerClass {
   private props: ISeekerProps;
-  inputRef: any = null;
+  private inputRef: ((arg: HTMLInputElement) => void) | undefined;
 
   constructor(props: ISeekerProps) {
     this.props = props;
